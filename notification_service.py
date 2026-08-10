@@ -1,10 +1,10 @@
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
-
+WARNING_THRESHOLD = 75
 
 def is_number(value):
-    """Return True for int/float values, but not booleans."""
+    """ Return True for int/float values, but not booleans """
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
@@ -15,7 +15,7 @@ def health():
 
 @app.post("/notification")
 def notification():
-    """Return a budget status notification based on current spending and a limit."""
+    """ Return a budget status notification based on current spending and a limit """
     data = request.get_json(silent=True)
 
     if not isinstance(data, dict):
@@ -49,7 +49,7 @@ def notification():
             level = "alert"
             message = f"You have reached your ${limit:.2f} budget limit."
 
-    elif percentage >= 75:
+    elif percentage >= WARNING_THRESHOLD:
         level = "warning"
         message = (
             f"Warning: You have used {percentage:.2f}% of your budget. "
